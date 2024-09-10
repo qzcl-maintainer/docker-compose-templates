@@ -9,7 +9,7 @@
 
 # Specify the Version of your compose file, i.e. v0.1
 version: "1"
-name: db
+name: postgres
 
 services:
   # Specify the name of your service
