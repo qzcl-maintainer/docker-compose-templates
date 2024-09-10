@@ -32,6 +32,9 @@ services:
       - app-be-net
     # Automatically restart the container if it stops or crashes
     restart: unless-stopped
+    # 
+    depends_on:
+      - db
 
   db:
     container_name: db
