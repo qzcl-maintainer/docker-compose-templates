@@ -1,0 +1,50 @@
+# Docker Compose Template - PostgreSQL
+# Author: QZCL Maintainer <maintainer@qzconsultancy.com>
+# Git Repo: https://github.com/qzcl-maintainer/docker-compose-templates.git
+# Created: 10-Sep-2024
+# Purpose: To deploy a docker container instance
+#
+# References:
+#   1. https://docs.docker.com/reference/compose-file/version-and-name/
+
+# Specify the Version of your compose file, i.e. v0.1
+version: "1"
+name: db
+
+services:
+  # Specify the name of your service
+  db:
+    # Name the container explicitly
+    container_name: db-postgres
+    # Set a custom hostname
+    hostname: db-postgres-01
+    # Use the official Nginx image
+    image: postgres:latest #16
+    # Map ports from the host to the container
+    ports:
+      - "$PG_PORT:5432"
+    # Define mounted volumes (for persistent data storage or custom configuration)
+    environment:
+      # - "POSTGRES_PASSWORD:$PGPASS" # Using .env
+      - "POSTGRES_PASSWORD:/run/secrets/pg_pass" # Using secrets file
+    volumes:
+      - ./data/postgres/lib/data:/var/lib/postgresql/data
+    # Assign the container to a custom network
+    networks:
+      - postgres-net
+    # Automatically restart the container if it stops or crashes
+    restart: unless-stopped
+    secrets:
+      - pg_pass
+
+# Define custom networks for inter-service communication
+networks:
+  postgres-net:
+
+# Defines the secret 'pg_root_pass'
+secrets:
+  pg_pass:
+    file: ./secrets/pg_pass
+
+# Check the config file by running `docker compose -f basic-compose.yml config`
+# End of Compose File
