@@ -41,11 +41,13 @@ services:
     hostname: db-postgres
     image: postgres
     ports:
-      - "5432:5432"
+      - "$PG_PORT:5432"
     volumes:
-      - app-data:/var/lib/postgresql/12/main
+      - app-data:/var/lib/postgresql/data
     networks:
       - app-be-net
+    environment:
+      - POSTGRES_PASSWORD=$PG_PASS
 
 # Define persistent named volumes
 volumes:
