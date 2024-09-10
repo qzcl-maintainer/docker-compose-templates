@@ -1,0 +1,58 @@
+# Docker Compose Template - Advanced Using .env File
+# Author: QZCL Maintainer <maintainer@qzconsultancy.com>
+# Git Repo: https://github.com/qzcl-maintainer/docker-compose-templates.git
+# Created: 10-Sep-2024
+# Purpose: To spin up a two docker containers.  In this example we will spin up an nginx instance called "app" and a db.
+#
+# References:
+#   1. https://docs.docker.com/reference/compose-file/version-and-name/
+
+# Specify the Version of your compose file, i.e. v0.1
+version: "1"
+name: redis
+
+services:
+  # Specify the name of your service
+  redis:
+    # Name the container explicitly
+    container_name: redis
+    # Set a custom hostname
+    hostname: redis-01
+    # Use the official Nginx image
+    image: redis:latest #7.4
+    # Define mounted volumes (for persistent data storage or custom configuration)
+    volumes:
+    #  - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - ./data:/data
+    # Assign the container to a custom network
+    networks:
+      - app-fe-net
+      - app-be-net
+    # Automatically restart the container if it stops or crashes
+    restart: unless-stopped
+    # Defines the startup order; the app container depends on the db container to be started and running
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    hostname: db-postgres
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-data:/var/lib/postgresql/12/main
+    networks:
+      - app-be-net
+    environment:
+      - "POSTGRES_PASSWORD:$PGPASS"
+
+# Define custom networks for inter-service communication
+networks:
+  app-fe-net:
+  app-be-net:
+
+
+# Check the config file by running `docker compose -f basic-compose.yml config`
+# End of Compose File
+
