@@ -32,7 +32,7 @@ services:
       - app-be-net
     # Automatically restart the container if it stops or crashes
     restart: unless-stopped
-    # 
+    # Defines the startup order; the app container depends on the db container to be started and running
     depends_on:
       - db
 
