@@ -1,0 +1,21 @@
+# Docker Compose Template - Basic
+# Author: QZCL Maintainer <maintainer@qzconsultancy.com>
+# Git Repo: https://github.com/qzcl-maintainer/docker-compose-templates.git
+# Created: 10-Sep-2024
+# Purpose: To spin up a basic docker container
+#
+# References:
+#   1. https://docs.docker.com/reference/compose-file/version-and-name/
+
+version:
+
+name:
+
+services:
+
+storage:
+
+network:
+
+# End of Compose File
+
