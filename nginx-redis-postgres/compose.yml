@@ -1,0 +1,72 @@
+# Docker Compose Template - Advanced Using .env, secrets & environments
+# Author: QZCL Maintainer <maintainer@qzconsultancy.com>
+# Git Repo: https://github.com/qzcl-maintainer/docker-compose-templates.git
+# Created: 10-Sep-2024
+# Purpose: To spin up a two docker containers.  In this example we will spin up an nginx instance called "app" and a db.
+#
+# References:
+#   1. https://docs.docker.com/reference/compose-file/version-and-name/
+
+# Specify the Version of your compose file, i.e. v0.1
+version: "1"
+name: app
+
+services:
+  # Specify the name of your service
+  app:
+    # Name the container explicitly
+    container_name: app
+    # Set a custom hostname
+    hostname: app-nginx-prod
+    # Use the official Nginx image
+    image: nginx:1.27.0
+    # Map ports from the host to the container
+    ports:
+      - "$WEB_PORT:80"
+    # Define mounted volumes (for persistent data storage or custom configuration)
+    volumes:
+      - app-data:/usr/share/nginx/html  # Adjusted to serve HTML files from the host
+    # Assign the container to a custom network
+    networks:
+      - app-fe-net
+      - app-be-net
+    # Automatically restart the container if it stops or crashes
+    restart: unless-stopped
+    # Defines the startup order; the app container depends on the db container to be started and running
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    hostname: db-postgres
+    image: postgres
+    environment:
+      # - "POSTGRES_PASSWORD:pgpass"
+      # - "POSTGRES_PASSWORD:$PGPASS" # Using .env
+      - "POSTGRES_PASSWORD:/run/secrets/pg_root_pass" # Using secrets file
+    ports:
+      - "5432:5432"
+    volumes:
+      - app-data:/var/lib/postgresql/12/main
+    networks:
+      - app-be-net
+    secrets:
+      - pg_root_pass
+
+# Define persistent named volumes
+volumes:
+  app-data:
+
+# Define custom networks for inter-service communication
+networks:
+  app-fe-net:
+  app-be-net:
+
+# Defines the secret 'pg_root_pass'
+secrets:
+  pg_root_pass:
+    file: ./secrets/pg_pw
+
+# Check the config file by running `docker compose -f basic-compose.yml config`
+# End of Compose File
+

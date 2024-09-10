@@ -1,0 +1,43 @@
+# Docker Compose Template - PostgreSQL
+# Author: QZCL Maintainer <maintainer@qzconsultancy.com>
+# Git Repo: https://github.com/qzcl-maintainer/docker-compose-templates.git
+# Created: 10-Sep-2024
+# Purpose: To deploy a docker container instance
+#
+# References:
+#   1. https://docs.docker.com/reference/compose-file/version-and-name/
+
+# Specify the Version of your compose file, i.e. v0.1
+version: "1"
+name: nginx
+
+services:
+  # Specify the name of your service
+  frontend:
+    # Name the container explicitly
+    container_name: fe-01
+    # Set a custom hostname
+    hostname: fe-01
+    # Use the official Nginx image
+    image: nginx:latest #1.27.1
+    # Map ports from the host to the container
+    ports:
+      - "$HTTP_PORT:80"
+      # - "$HTTPS_PORT:443"
+    # Define mounted volumes (for persistent data storage or custom configuration)
+    volumes:
+      - "./tmp:/tmp2"
+      # - ./ssl:/etc/nginx/ssl
+      # - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+    # Assign the container to a custom network
+    networks:
+      - http-net
+    # Automatically restart the container if it stops or crashes
+    restart: unless-stopped
+
+# Define custom networks for inter-service communication
+networks:
+  http-net:
+
+# Check the config file by running `docker compose -f basic-compose.yml config`
+# End of Compose File
