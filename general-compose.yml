@@ -1,4 +1,4 @@
-# Docker Compose Template - Basic
+# Docker Compose Template - General
 # Author: QZCL Maintainer <maintainer@qzconsultancy.com>
 # Git Repo: https://github.com/qzcl-maintainer/docker-compose-templates.git
 # Created: 10-Sep-2024
@@ -25,9 +25,20 @@ services:
       - "80:80"
     # Define mounted volumes (for persistent data storage or custom configuration)
     volumes:
-      - ./app-data:/usr/share/nginx/html  # Adjusted to serve HTML files from the host
+      - app-data:/usr/share/nginx/html  # Adjusted to serve HTML files from the host
+    # Assign the container to a custom network
+    networks:
+      - app-net
     # Automatically restart the container if it stops or crashes
     restart: unless-stopped
+
+# Define persistent named volumes
+volumes:
+  app-data:
+
+# Define custom networks for inter-service communication
+networks:
+  app-net:
 
 # Check the config file by running `docker compose -f basic-compose.yml config`
 # End of Compose File
